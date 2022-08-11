@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="3c3c4d7d-ed1d-4419-90ff-a3d0d9c75663" >
+		<http:listener-connection host="0.0.0.0" port="8080" />
+	</http:listener-config>
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="7d3aafe4-7c4a-4d59-8889-8f9ead29c808" />
+	<flow name="helloworldFlow" doc:id="ad290725-4931-4f7c-b724-ecf91f6b02af" >
+		<http:listener doc:name="Listener" doc:id="0a68befe-b9d4-4210-bf26-ddfd5c2cece8" config-ref="HTTP_Listener_config" path="/test"/>
+		<set-variable value="#[attributes.queryParams.name]" doc:name="Set Variable" doc:id="0cecd45c-f46f-4012-8034-a209b1e833c4" variableName="name"/>
+		<set-variable value="#[attributes.queryParams.id]" doc:name="Set Variable" doc:id="60dc5689-644c-46ed-8e24-722d4dbfcc88" variableName="id"/>
+		<os:store doc:name="Store" doc:id="2dbe79fd-fe97-4765-99aa-864c8bb5d797" key="#[vars.name]" objectStore="Object_store">
+			<os:value ><![CDATA[#[vars.id]]]></os:value>
+		</os:store>
+	</flow>
+	<flow name="helloworldFlow1" doc:id="e8903051-3368-4d5e-b2f1-655b0db93e28" >
+		<http:listener doc:name="Listener" doc:id="d0c395a1-9c12-4595-bfcb-224092ff0d67" config-ref="HTTP_Listener_config" path="rl"/>
+		<os:retrieve-all doc:name="Retrieve all" doc:id="a2f7245a-3787-4c54-95af-1beabfe368dc" objectStore="Object_store"/>
+	</flow>
+	<flow name="helloworldFlow2" doc:id="57ff8ff9-20e4-439f-ac43-da5cc5aa8d1d" >
+		<http:listener doc:name="Listener" doc:id="30d49b36-7967-45b4-9895-17f4091fb727" config-ref="HTTP_Listener_config" path="/retrive"/>
+		<os:retrieve doc:name="Retrieve" doc:id="fbbe9017-9a3c-45fe-a489-f639fa3c2b11" key="#[attributes.queryParams.name]" objectStore="Object_store">
+			<os:default-value ><![CDATA[#[attributes.queryParams.id]]]></os:default-value>
+		</os:retrieve>
+	</flow>
+	<flow name="helloworldFlow3" doc:id="dc9d9ed5-6365-4208-a764-90404878b99b" >
+		<http:listener doc:name="Listener" doc:id="b7603645-356e-490b-baf5-81fe7d0fd502" config-ref="HTTP_Listener_config" path="rak"/>
+		<os:retrieve-all-keys doc:name="Retrieve all keys" doc:id="5e7555cb-094c-4e32-83f3-cb6b8fefced4" objectStore="Object_store"/>
+	</flow>
+	<flow name="helloworldFlow4" doc:id="94ddf086-2a73-4da1-b86b-9b0f12ea3a4c" >
+		<http:listener doc:name="Listener" doc:id="70c93cf6-1650-413f-8b5b-0f4c0bf3bf81" config-ref="HTTP_Listener_config" path="con"/>
+		<os:contains doc:name="Contains" doc:id="28b4ff21-444d-40a5-9b79-1005ef1ae684" key="#[attributes.queryParams.name]" objectStore="Object_store"/>
+		<ee:transform doc:name="Transform Message" doc:id="32dd4d25-91b9-4bba-ad5c-c1c270559ab1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="helloworldFlow5" doc:id="779a55dc-c926-45cc-b21b-41cbdf878b51" >
+		<http:listener doc:name="Listener" doc:id="638ad196-4c3a-4113-8a2e-6c9058ede1f6" config-ref="HTTP_Listener_config" path="rm"/>
+		<os:remove doc:name="Remove" doc:id="a07454a2-cdb3-4e93-83d9-6073f9a27342" key="#[attributes.queryParams.name]" objectStore="Object_store"/>
+	</flow>
+	<flow name="helloworldFlow6" doc:id="6bfc9997-18f3-4556-810f-3dab62c2404d" >
+		<http:listener doc:name="Listener" doc:id="fa4e8a83-286a-4ebc-b28a-73cccb7a1db2" config-ref="HTTP_Listener_config" path="clear"/>
+		<os:clear doc:name="Clear" doc:id="68ff9ea6-6d46-4bd7-adee-03882e38635e" objectStore="Object_store"/>
+	</flow>
+	<flow name="helloworldFlow7" doc:id="6565f6ca-666d-4b45-a251-5b5493467346" >
+		<http:listener doc:name="Listener" doc:id="35a7df9a-5eab-49b9-b729-dbdeedb0e5be" config-ref="HTTP_Listener_config" path="records"/>
+		<logger level="INFO" doc:name="Logger" doc:id="0055954c-a13b-45c4-aa33-d2540fa636ff" message="#[payload]"/>
+		<os:store doc:name="Store" doc:id="08d1e878-2f80-4d09-b547-173f8104453b" key="song-details" objectStore="Object_store"/>
+		<logger level="INFO" doc:name="Logger" doc:id="759a6976-4b74-449c-a99e-058791981c5b" message="#[payload]"/>
+	</flow>
+</mule>
