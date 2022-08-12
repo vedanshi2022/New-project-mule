@@ -13,6 +13,7 @@ http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/cu
 		<http:listener doc:name="Listener" doc:id="407b1d65-6293-49c2-a7cc-5af8c4125542" config-ref="HTTP_Listener_config" path="store"/>
 		<set-variable value="#[attributes.queryParams.song]" doc:name="Set Variable" doc:id="0247061d-3711-4d61-9e7c-c187273405e5" variableName="song"/>
 		<set-variable value="#[attributes.queryParams.artist]" doc:name="Set Variable" doc:id="92eca863-1044-47e2-a8ba-76ed5fa62713" variableName="artist "/>
+		<logger level="INFO" doc:name="Logger" doc:id="cd876fa2-796e-4ecf-b098-357d1056d529" message="Hello"/>
 		<os:store doc:name="Store" doc:id="315c2f79-cbe8-4214-9cc5-295fc9326cbd" objectStore="Object_store" key="#[vars.song]">
 			<os:value ><![CDATA[#[vars.artist]]]></os:value>
 		</os:store>
