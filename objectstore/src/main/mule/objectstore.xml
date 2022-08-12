@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="1f47240c-a5e0-435d-98e1-c9c5d8fd0805" >
+		<http:listener-connection host="0.0.0.0" port="8080" />
+	</http:listener-config>
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="1ef27584-78e2-45e0-99de-8543afc672a8" />
+	<flow name="objectstoreFlow" doc:id="aeb3bc94-4e7a-49e2-a154-066008f52e90" >
+		<http:listener doc:name="Listener" doc:id="407b1d65-6293-49c2-a7cc-5af8c4125542" config-ref="HTTP_Listener_config" path="store"/>
+		<set-variable value="#[attributes.queryParams.song]" doc:name="Set Variable" doc:id="0247061d-3711-4d61-9e7c-c187273405e5" variableName="song"/>
+		<set-variable value="#[attributes.queryParams.artist]" doc:name="Set Variable" doc:id="92eca863-1044-47e2-a8ba-76ed5fa62713" variableName="artist "/>
+		<os:store doc:name="Store" doc:id="315c2f79-cbe8-4214-9cc5-295fc9326cbd" objectStore="Object_store" key="#[vars.song]">
+			<os:value ><![CDATA[#[vars.artist]]]></os:value>
+		</os:store>
+	</flow>
+</mule>
